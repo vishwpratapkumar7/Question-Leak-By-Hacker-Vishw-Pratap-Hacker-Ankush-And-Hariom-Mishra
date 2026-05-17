@@ -1,0 +1,1940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔥 Programming with C — Question Leak 18 May 2026 | By Hacker Vishw Pratap, Hacker Ankush &amp; Hariom Mishra</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #03040a;
+    --bg2: #080d1a;
+    --card: #0d1529;
+    --card2: #111e38;
+    --accent: #00d4ff;
+    --accent2: #ff6b35;
+    --accent3: #7c3aed;
+    --green: #00ff88;
+    --yellow: #ffd700;
+    --red: #ff3366;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --border: #1e3a5f;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 17px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* Animated background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 20%, rgba(0,212,255,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(124,58,237,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 50% 50%, rgba(255,107,53,0.04) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* HEADER */
+  header {
+    position: relative;
+    text-align: center;
+    padding: 60px 20px 50px;
+    background: linear-gradient(180deg, #000510 0%, transparent 100%);
+    border-bottom: 2px solid var(--accent);
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent3), var(--accent), var(--green), var(--accent2), var(--red));
+    animation: shimmer 3s linear infinite;
+    background-size: 300% 100%;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 300% 0%; }
+  }
+
+  .leak-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--red), #ff6b35);
+    color: #fff;
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    padding: 6px 20px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+    animation: pulse-badge 2s ease-in-out infinite;
+    text-transform: uppercase;
+  }
+
+  @keyframes pulse-badge {
+    0%, 100% { box-shadow: 0 0 10px rgba(255,51,102,0.5); }
+    50% { box-shadow: 0 0 30px rgba(255,51,102,0.9), 0 0 60px rgba(255,51,102,0.4); }
+  }
+
+  .date-tag {
+    display: inline-block;
+    background: linear-gradient(135deg, #ffd700, #ff6b35);
+    color: #000;
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    font-weight: 900;
+    padding: 8px 24px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+  }
+
+  header h1 {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(28px, 6vw, 64px);
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--accent), var(--green), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+    margin-bottom: 10px;
+    text-shadow: none;
+    filter: drop-shadow(0 0 30px rgba(0,212,255,0.4));
+  }
+
+  header p {
+    font-size: 18px;
+    color: var(--muted);
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 2px;
+  }
+
+  /* ALERT BOX */
+  .alert-box {
+    background: linear-gradient(135deg, rgba(255,51,102,0.15), rgba(255,107,53,0.1));
+    border: 2px solid var(--red);
+    border-radius: 8px;
+    padding: 20px 30px;
+    margin: 30px auto;
+    max-width: 900px;
+    text-align: center;
+    font-family: 'Orbitron', monospace;
+    font-size: 16px;
+    color: var(--yellow);
+    letter-spacing: 1px;
+    animation: alert-glow 2s ease-in-out infinite;
+    position: relative;
+    z-index: 1;
+  }
+
+  @keyframes alert-glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(255,51,102,0.3); }
+    50% { box-shadow: 0 0 40px rgba(255,51,102,0.6); }
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(3,4,10,0.97);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 20px;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+  }
+
+  nav::-webkit-scrollbar { display: none; }
+
+  .nav-inner {
+    display: inline-flex;
+    gap: 2px;
+    padding: 8px 0;
+    min-width: max-content;
+  }
+
+  nav a {
+    display: inline-block;
+    padding: 8px 14px;
+    color: var(--muted);
+    text-decoration: none;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    border-radius: 4px;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+    border: 1px solid transparent;
+  }
+
+  nav a:hover {
+    color: var(--accent);
+    background: rgba(0,212,255,0.1);
+    border-color: var(--accent);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* SECTION */
+  .section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 40px;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .section:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 30px rgba(0,212,255,0.1);
+  }
+
+  .section-header {
+    padding: 22px 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+  }
+
+  .section-header:hover {
+    background: rgba(0,212,255,0.05);
+  }
+
+  .q-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: #000;
+    background: linear-gradient(135deg, var(--accent), var(--green));
+    padding: 5px 12px;
+    border-radius: 4px;
+    min-width: 50px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .section-header h2 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--text);
+    flex: 1;
+    line-height: 1.3;
+  }
+
+  .toggle-icon {
+    font-size: 20px;
+    color: var(--accent);
+    transition: transform 0.3s;
+    flex-shrink: 0;
+  }
+
+  .section.open .toggle-icon {
+    transform: rotate(180deg);
+  }
+
+  .section-body {
+    display: none;
+    padding: 30px;
+  }
+
+  .section.open .section-body {
+    display: block;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* CONTENT STYLES */
+  h3 {
+    font-family: 'Orbitron', monospace;
+    font-size: 15px;
+    color: var(--accent);
+    margin: 25px 0 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(0,212,255,0.2);
+  }
+
+  h3:first-child { margin-top: 0; }
+
+  h4 {
+    font-size: 17px;
+    color: var(--yellow);
+    margin: 18px 0 8px;
+    font-weight: 700;
+  }
+
+  p { margin-bottom: 12px; }
+
+  ul, ol {
+    padding-left: 25px;
+    margin-bottom: 14px;
+  }
+
+  li { margin-bottom: 6px; }
+
+  /* CODE BLOCKS */
+  pre {
+    background: #010508;
+    border: 1px solid #1a3a5c;
+    border-left: 4px solid var(--accent);
+    border-radius: 8px;
+    padding: 20px;
+    overflow-x: auto;
+    margin: 16px 0;
+    position: relative;
+  }
+
+  pre::before {
+    content: 'C CODE';
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-family: 'Orbitron', monospace;
+    font-size: 9px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    opacity: 0.6;
+  }
+
+  code {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 14px;
+    color: #a8d8ff;
+    line-height: 1.8;
+  }
+
+  .kw { color: #ff79c6; } /* keywords */
+  .fn { color: #50fa7b; } /* functions */
+  .cm { color: #6272a4; font-style: italic; } /* comments */
+  .str { color: #f1fa8c; } /* strings */
+  .num { color: #bd93f9; } /* numbers */
+  .inc { color: #ff6b35; } /* includes */
+  .type { color: #8be9fd; } /* types */
+
+  /* TABLES */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 15px;
+  }
+
+  th {
+    background: linear-gradient(135deg, rgba(0,212,255,0.2), rgba(124,58,237,0.2));
+    color: var(--accent);
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    padding: 12px 16px;
+    text-align: left;
+    border: 1px solid var(--border);
+  }
+
+  td {
+    padding: 10px 16px;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+  tr:hover td { background: rgba(0,212,255,0.05); }
+
+  /* HIGHLIGHT BOXES */
+  .highlight {
+    background: linear-gradient(135deg, rgba(0,212,255,0.08), rgba(0,212,255,0.03));
+    border: 1px solid rgba(0,212,255,0.3);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 14px 0;
+  }
+
+  .highlight.green {
+    background: linear-gradient(135deg, rgba(0,255,136,0.08), rgba(0,255,136,0.02));
+    border-color: rgba(0,255,136,0.3);
+  }
+
+  .highlight.orange {
+    background: linear-gradient(135deg, rgba(255,107,53,0.1), rgba(255,107,53,0.03));
+    border-color: rgba(255,107,53,0.4);
+  }
+
+  .highlight.purple {
+    background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(124,58,237,0.03));
+    border-color: rgba(124,58,237,0.4);
+  }
+
+  /* FLOWCHART SYMBOLS */
+  .flowchart-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin: 16px 0;
+  }
+
+  .flow-symbol {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .flow-shape {
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* EXPAND ALL btn */
+  .expand-all-btn {
+    display: block;
+    margin: 20px auto 30px;
+    background: linear-gradient(135deg, var(--accent), var(--green));
+    color: #000;
+    border: none;
+    padding: 14px 40px;
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+
+  .expand-all-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0,212,255,0.4);
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 40px 20px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    position: relative;
+    z-index: 1;
+  }
+
+  footer .glow-text {
+    color: var(--accent);
+    text-shadow: 0 0 10px rgba(0,212,255,0.5);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .section-body { padding: 20px 16px; }
+    .section-header { padding: 16px 18px; }
+    .section-header h2 { font-size: 16px; }
+    pre { padding: 14px; font-size: 13px; }
+    table { font-size: 13px; }
+  }
+
+  /* Pattern styles */
+  .pattern-output {
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--green);
+    background: #010508;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin: 10px 0;
+    line-height: 1.6;
+    font-size: 15px;
+  }
+
+  .inline-code {
+    font-family: 'Share Tech Mono', monospace;
+    background: rgba(0,212,255,0.1);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 3px;
+    padding: 2px 7px;
+    font-size: 13px;
+    color: var(--accent);
+  }
+
+  
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="leak-badge">🚨 EXAM QUESTION LEAK 🚨</div>
+  <br>
+  <div class="date-tag">📅 18 MAY 2026 — EXAM DATE</div>
+  <h1>Programming with C</h1>
+  <p>// Complete Study Guide — All Questions Answered //</p>
+</header>
+
+<div class="alert-box">
+  ⚡ 18 MAY 2026 — PROGRAMMING WITH C — QUESTION LEAK ⚡<br><span style="color:#ffd700;font-size:14px;">💀 Leaked By: <strong>Hacker Vishw Pratap</strong>, <strong>Hacker Ankush</strong> &amp; <strong>Hariom Mishra</strong> 💀</span><br>
+  <span style="font-size:13px; color:var(--muted);">All answers are detailed and exam-ready. Click any question to expand.</span>
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#q1">Q1: C Intro</a>
+    <a href="#q2">Q2: Algorithm</a>
+    <a href="#q3">Q3: Data Types</a>
+    <a href="#q4">Q4: Conditions</a>
+    <a href="#q5">Q5: Loops</a>
+    <a href="#q6">Q6: Switch</a>
+    <a href="#q7">Q7: break/continue/goto</a>
+    <a href="#q8">Q8: Prime</a>
+    <a href="#q9">Q9: Fibonacci</a>
+    <a href="#q10">Q10: Arrays</a>
+    <a href="#q11">Q11: Matrix</a>
+    <a href="#q12">Q12: Call by Value/Ref</a>
+    <a href="#q13">Q13: Strings</a>
+    <a href="#q14">Q14: Pointers</a>
+    <a href="#q15">Q15: Recursion</a>
+    <a href="#q16">Q16: Structure</a>
+    <a href="#q17">Q17: Library Functions</a>
+    <a href="#q18">Q18: Pattern</a>
+    <a href="#q19">Q19: Pointers+Fn</a>
+    <a href="#q20">Q20: Flowchart</a>
+  </div>
+</nav>
+
+<main>
+  <button class="expand-all-btn" onclick="expandAll()">⚡ EXPAND ALL ANSWERS</button>
+
+  <!-- Q1 -->
+  <div class="section" id="q1">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="q-num">Q.1</span>
+      <h2>Discuss about "C" Programming and write the structure of C Program</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="section-body">
+      <h3>What is C?</h3>
+      <p>C is a <strong>general-purpose, structured, middle-level programming language</strong> developed by <strong>Dennis Ritchie</strong> at Bell Laboratories in <strong>1972</strong>. It was developed to write the UNIX operating system.</p>
+      <div class="highlight">
+        <strong>Key Features of C:</strong>
+        <ul>
+          <li>Simple and efficient — close to machine language</li>
+          <li>Structured programming — uses functions</li>
+          <li>Portable — code runs on different machines</li>
+          <li>Rich library of built-in functions</li>
+          <li>Supports pointers, arrays, structures</li>
+          <li>Fast execution speed</li>
+          <li>Extensible — can add your own functions</li>
+        </ul>
+      </div>
+
+      <h3>Structure of a C Program</h3>
+      <pre><code><span class="cm">/* ===== STRUCTURE OF A C PROGRAM ===== */</span>
+
+<span class="cm">/* 1. Documentation Section */</span>
+<span class="cm">// Author: Your Name, Date: 18-May-2026</span>
+
+<span class="cm">/* 2. Preprocessor / Link Section */</span>
+<span class="inc">#include</span> &lt;stdio.h&gt;   <span class="cm">// Standard Input/Output</span>
+<span class="inc">#include</span> &lt;stdlib.h&gt;  <span class="cm">// Standard Library</span>
+<span class="inc">#include</span> &lt;math.h&gt;    <span class="cm">// Math functions</span>
+
+<span class="cm">/* 3. Definition Section (Macros / Constants) */</span>
+<span class="kw">#define</span> PI 3.14159
+<span class="kw">#define</span> MAX 100
+
+<span class="cm">/* 4. Global Declaration Section */</span>
+<span class="type">int</span> globalVar = 10;   <span class="cm">// Accessible everywhere</span>
+
+<span class="cm">/* 5. Function Prototype Section */</span>
+<span class="type">void</span> <span class="fn">greet</span>();
+<span class="type">int</span> <span class="fn">add</span>(<span class="type">int</span> a, <span class="type">int</span> b);
+
+<span class="cm">/* 6. Main Function — Entry Point */</span>
+<span class="type">int</span> <span class="fn">main</span>() {
+    <span class="cm">/* 6a. Local Variable Declaration */</span>
+    <span class="type">int</span> x = <span class="num">5</span>, y = <span class="num">10</span>;
+    <span class="type">int</span> result;
+
+    <span class="cm">/* 6b. Executable Statements */</span>
+    result = <span class="fn">add</span>(x, y);
+    <span class="fn">printf</span>(<span class="str">"Sum = %d\n"</span>, result);
+    <span class="fn">greet</span>();
+
+    <span class="kw">return</span> <span class="num">0</span>;  <span class="cm">// Return to OS</span>
+}
+
+<span class="cm">/* 7. User-Defined Functions */</span>
+<span class="type">void</span> <span class="fn">greet</span>() {
+    <span class="fn">printf</span>(<span class="str">"Hello, C Programming!\n"</span>);
+}
+
+<span class="type">int</span> <span class="fn">add</span>(<span class="type">int</span> a, <span class="type">int</span> b) {
+    <span class="kw">return</span> a + b;
+}</code></pre>
+
+      <h3>Sections Explained</h3>
+      <table>
+        <tr><th>Section</th><th>Purpose</th></tr>
+        <tr><td>Documentation</td><td>Comments about program — author, date, description</td></tr>
+        <tr><td>Link / Preprocessor</td><td>#include files to add library functions</td></tr>
+        <tr><td>Definition</td><td>#define macros and constants</td></tr>
+        <tr><td>Global Declaration</td><td>Variables accessible throughout the program</td></tr>
+        <tr><td>main()</td><td>Starting point of execution</td></tr>
+        <tr><td>User-defined Functions</td><td>Custom functions for specific tasks</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="section" id="q2">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="q-num">Q.2</span>
+      <h2>Define an Algorithm</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="section-body">
+      <h3>Definition</h3>
+      <p>An <strong>algorithm</strong> is a <em>finite set of well-defined, ordered instructions</em> (steps) to solve a specific problem or perform a computation. It takes input, processes it, and gives an output.</p>
+
+      <div class="highlight green">
+        <strong>Characteristics of a Good Algorithm:</strong>
+        <ul>
+          <li><strong>Input:</strong> Has zero or more inputs</li>
+          <li><strong>Output:</strong> Produces at least one output</li>
+          <li><strong>Definiteness:</strong> Each step is clear and unambiguous</li>
+          <li><strong>Finiteness:</strong> Must terminate after a finite number of steps</li>
+          <li><strong>Effectiveness:</strong> Each step must be basic and executable</li>
+        </ul>
+      </div>
+
+      <h3>Example — Algorithm to Find Sum of Two Numbers</h3>
+      <div class="highlight">
+        <strong>Step 1:</strong> Start<br>
+        <strong>Step 2:</strong> Read two numbers A and B<br>
+        <strong>Step 3:</strong> Compute SUM = A + B<br>
+        <strong>Step 4:</strong> Print SUM<br>
+        <strong>Step 5:</strong> Stop
+      </div>
+
+      <h3>Example — Algorithm to Find Largest of Two Numbers</h3>
+      <div class="highlight">
+        <strong>Step 1:</strong> Start<br>
+        <strong>Step 2:</strong> Read A, B<br>
+        <strong>Step 3:</strong> If A &gt; B, print "A is largest", else print "B is largest"<br>
+        <strong>Step 4:</strong> Stop
+      </div>
+
+      <h3>Importance of Algorithms</h3>
+      <ul>
+        <li>Helps in planning before writing code</li>
+        <li>Makes program logic clear and correct</li>
+        <li>Helps in analyzing time and space complexity</li>
+        <li>Reusable and language-independent</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="section" id="q3">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="q-num">Q.3</span>
+      <h2>List and explain the different data types in C</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="section-body">
+      <h3>What is a Data Type?</h3>
+      <p>A <strong>data type</strong> defines the type of data a variable can hold, how much memory it occupies, and what operations can be performed on it.</p>
+
+      <h3>Classification of Data Types</h3>
+
+      <h4>1. Primary (Fundamental) Data Types</h4>
+      <table>
+        <tr><th>Data Type</th><th>Size</th><th>Range</th><th>Example</th></tr>
+        <tr><td><span class="inline-code">int</span></td><td>2 or 4 bytes</td><td>-32768 to 32767 (2B) / -2B to 2B (4B)</td><td>int x = 10;</td></tr>
+        <tr><td><span class="inline-code">float</span></td><td>4 bytes</td><td>3.4E-38 to 3.4E+38</td><td>float f = 3.14;</td></tr>
+        <tr><td><span class="inline-code">double</span></td><td>8 bytes</td><td>1.7E-308 to 1.7E+308</td><td>double d = 3.14159;</td></tr>
+        <tr><td><span class="inline-code">char</span></td><td>1 byte</td><td>-128 to 127</td><td>char c = 'A';</td></tr>
+        <tr><td><span class="inline-code">void</span></td><td>0 bytes</td><td>No value</td><td>void func();</td></tr>
+      </table>
+
+      <h4>2. Modifiers</h4>
+      <p>Modifiers change the size or sign of primary types:</p>
+      <ul>
+        <li><span class="inline-code">signed</span> — can hold positive and negative values</li>
+        <li><span class="inline-code">unsigned</span> — only positive values (doubles the positive range)</li>
+        <li><span class="inline-code">short</span> — smaller size (short int = 2 bytes)</li>
+        <li><span class="inline-code">long</span> — larger size (long int = 4/8 bytes)</li>
+      </ul>
+
+      <h4>3. Derived Data Types</h4>
+      <ul>
+        <li><strong>Array:</strong> Collection of same-type elements — <span class="inline-code">int arr[10];</span></li>
+        <li><strong>Pointer:</strong> Stores address of another variable — <span class="inline-code">int *p;</span></li>
+        <li><strong>Function:</strong> A block of code with a return type</li>
+      </ul>
+
+      <h4>4. User-Defined Data Types</h4>
+      <ul>
+        <li><strong>Structure (struct):</strong> Groups different types</li>
+        <li><strong>Union:</strong> Members share same memory</li>
+        <li><strong>Enum:</strong> Named integer constants</li>
+        <li><strong>typedef:</strong> Creates alias for data types</li>
+      </ul>
+
+      <pre><code><span class="inc">#include</span> &lt;stdio.h&gt;
+<span class="type">int</span> <span class="fn">main</span>() {
+    <span class="type">int</span> age = <span class="num">20</span>;
+    <span class="type">float</span> salary = <span class="num">25000.50</span>;
+    <span class="type">double</span> pi = <span class="num">3.14159265</span>;
+    <span class="type">char</span> grade = <span class="str">'A'</span>;
+    <span class="type">unsigned</span> <span class="type">int</span> marks = <span class="num">450</span>;
+
+    <span class="fn">printf</span>(<span class="str">"Age: %d\n"</span>, age);
+    <span class="fn">printf</span>(<span class="str">"Salary: %.2f\n"</span>, salary);
+    <span class="fn">printf</span>(<span class="str">"Pi: %lf\n"</span>, pi);
+    <span class="fn">printf</span>(<span class="str">"Grade: %c\n"</span>, grade);
+    <span class="fn">printf</span>(<span class="str">"Marks: %u\n"</span>, marks);
+    <span class="kw">return</span> <span class="num">0</span>;
+}</code></pre>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="section" id="q4">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="q-num">Q.4</span>
+      <h2>What are conditional statements? Compare nested-if else with else-if Ladder</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="section-body">
+      <h3>What are Conditional Statements?</h3>
+      <p>Conditional statements control program flow based on conditions. They allow the program to make decisions and execute specific blocks of code when certain conditions are true or false.</p>
+
+      <div class="highlight">
+        <strong>Types of Conditional Statements in C:</strong>
+        <ol>
+          <li>Simple if</li>
+          <li>if-else</li>
+          <li>Nested if-else</li>
+          <li>else-if Ladder</li>
+          <li>switch-case</li>
+        </ol>
+      </div>
+
+      <h3>Nested if-else</h3>
+      <p>When an <strong>if or else block contains another if-else</strong> inside it, it is called nested if-else.</p>
+      <pre><code><span class="cm">/* Nested if-else: Find largest of 3 numbers */</span>
+<span class="type">int</span> a = <span class="num">10</span>, b = <span class="num">20</span>, c = <span class="num">15</span>;
+
+<span class="kw">if</span> (a &gt; b) {
+    <span class="kw">if</span> (a &gt; c)
+        <span class="fn">printf</span>(<span class="str">"A is largest\n"</span>);   <span class="cm">// inner if</span>
+    <span class="kw">else</span>
+        <span class="fn">printf</span>(<span class="str">"C is largest\n"</span>);   <span class="cm">// inner else</span>
+} <span class="kw">else</span> {
+    <span class="kw">if</span> (b &gt; c)
+        <span class="fn">printf</span>(<span class="str">"B is largest\n"</span>);
+    <span class="kw">else</span>
+        <span class="fn">printf</span>(<span class="str">"C is largest\n"</span>);
+}</code></pre>
+
+      <h3>else-if Ladder</h3>
+      <p>A series of <strong>if-else-if conditions</strong> chained together. When one condition is true, its block runs and the rest are skipped.</p>
+      <pre><code><span class="cm">/* else-if Ladder: Grade System */</span>
+<span class="type">int</span> marks = <span class="num">75</span>;
+
+<span class="kw">if</span> (marks &gt;= <span class="num">90</span>)
+    <span class="fn">printf</span>(<span class="str">"Grade: A+\n"</span>);
+<span class="kw">else if</span> (marks &gt;= <span class="num">80</span>)
+    <span class="fn">printf</span>(<span class="str">"Grade: A\n"</span>);
+<span class="kw">else if</span> (marks &gt;= <span class="num">70</span>)
+    <span class="fn">printf</span>(<span class="str">"Grade: B\n"</span>);     <span class="cm">// This executes</span>
+<span class="kw">else if</span> (marks &gt;= <span class="num">60</span>)
+    <span class="fn">printf</span>(<span class="str">"Grade: C\n"</span>);
+<span class="kw">else</span>
+    <span class="fn">printf</span>(<span class="str">"Grade: Fail\n"</span>);</code></pre>
+
+      <h3>Comparison: Nested if-else vs else-if Ladder</h3>
+      <table>
+        <tr><th>Feature</th><th>Nested if-else</th><th>else-if Ladder</th></tr>
+        <tr><td>Structure</td><td>if inside if</td><td>Sequential if-else-if chain</td></tr>
+        <tr><td>Readability</td><td>Can get complex/deep</td><td>More readable and clean</td></tr>
+        <tr><td>Use Case</td><td>Multiple conditions on different variables</td><td>Multiple conditions on same variable</td></tr>
+        <tr><td>Indentation</td><td>Deeply indented</td><td>Flat structure</td></tr>
+        <tr><td>Complexity</td><td>Can become confusing</td><td>Easy to follow</td></tr>
+        <tr><td>Flexibility</td><td>Each branch can branch further</td><td>Linear, one path chosen</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="section" id="q5">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="q-num">Q.5</span>
+      <h2>What do you mean by Loop? Differentiate between 'while' and 'do while'</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="section-body">
+      <h3>What is a Loop?</h3>
+      <p>A <strong>loop</strong> is a control structure that <em>repeats a block of code</em> as long as a specified condition is true. Loops avoid writing repetitive code.</p>
+
+      <div class="highlight">
+        <strong>Types of Loops in C:</strong>
+        <ul>
+          <li><strong>for loop</strong> — when number of iterations is known</li>
+          <li><strong>while loop</strong> — when condition is checked before execution</li>
+          <li><strong>do-while loop</strong> — when block executes at least once</li>
+        </ul>
+      </div>
+
+      <h3>while Loop</h3>
+      <p>Checks the condition <strong>before</strong> executing the body. If condition is false from the start, the loop body never executes.</p>
+      <pre><code><span class="cm">/* Syntax */</span>
+<span class="kw">while</span> (condition) {
+    <span class="cm">// body</span>
+}
+
+<span class="cm">/* Example: Print 1 to 5 */</span>
+<span class="type">int</span> i = <span class="num">1</span>;
+<span class="kw">while</span> (i &lt;= <span class="num">5</span>) {
+    <span class="fn">printf</span>(<span class="str">"%d "</span>, i);
+    i++;
+}
+<span class="cm">// Output: 1 2 3 4 5</span></code></pre>
+
+      <h3>do-while Loop</h3>
+      <p>Checks the condition <strong>after</strong> executing the body. The loop body executes <strong>at least once</strong>, even if the condition is false.</p>
+      <pre><code><span class="cm">/* Syntax */</span>
+<span class="kw">do</span> {
+    <span class="cm">// body</span>
+} <span class="kw">while</span> (condition);
+
+<span class="cm">/* Example: Print 1 to 5 */</span>
+<span class="type">int</span> i = <span class="num">1</span>;
+<span class="kw">do</span> {
+    <span class="fn">printf</span>(<span class="str">"%d "</span>, i);
+    i++;
+} <span class="kw">while</span> (i &lt;= <span class="num">5</span>);
+<span class="cm">// Output: 1 2 3 4 5</span>
+
+<span class="cm">/* Key Difference — false condition from start */</span>
+<span class="type">int</span> j = <span class="num">10</span>;
+<span class="kw">while</span> (j &lt; <span class="num">5</span>) { <span class="fn">printf</span>(<span class="str">"while"</span>); }   <span class="cm">// Never prints</span>
+<span class="kw">do</span> { <span class="fn">printf</span>(<span class="str">"do-while"</span>); } <span class="kw">while</span> (j &lt; <span class="num">5</span>); <span class="cm">// Prints ONCE</span></code></pre>
+
+      <h3>Difference: while vs do-while</h3>
+      <table>
+        <tr><th>Feature</th><th>while</th><th>do-while</th></tr>
+        <tr><td>Condition Check</td><td>Before loop body (Entry-controlled)</td><td>After loop body (Exit-controlled)</td></tr>
+        <tr><td>Minimum Executions</td><td>0 (may not execute)</td><td>1 (always executes once)</td></tr>
+        <tr><td>Semicolon</td><td>No semicolon after condition</td><td>Semicolon after while(condition);</td></tr>
+        <tr><td>Use Case</td><td>When condition may be false initially</td><td>Menu-driven programs, user input validation</td></tr>
+        <tr><td>Syntax</td><td>while(cond) { }</td><td>do { } while(cond);</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="section" id="q6">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="q-num">Q.6</span>
+      <h2>Explain the switch statement in C with suitable example</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="section-body">
+      <h3>What is Switch Statement?</h3>
+      <p>The <strong>switch statement</strong> is a multi-way branching statement. It tests the value of a variable or expression and compares it with multiple cases. When a match is found, that case's code executes.</p>
+
+      <div class="highlight orange">
+        <strong>Key Rules:</strong>
+        <ul>
+          <li>Switch expression must be of <strong>int or char</strong> type</li>
+          <li>Each case ends with <strong>break</strong> (to prevent fall-through)</li>
+          <li><strong>default</strong> runs when no case matches (optional)</li>
+          <li>Case values must be <strong>constants</strong>, not variables</li>
+        </ul>
+      </div>
+
+      <h3>Syntax</h3>
+      <pre><code><span class="kw">switch</span> (expression) {
+    <span class="kw">case</span> value1:
+        <span class="cm">// code</span>
+        <span class="kw">break</span>;
+    <span class="kw">case</span> value2:
+        <span class="cm">// code</span>
+        <span class="kw">break</span>;
+    <span class="cm">// ...more cases</span>
+    <span class="kw">default</span>:
+        <span class="cm">// code if no case matches</span>
+}</code></pre>
+
+      <h3>Example — Simple Calculator</h3>
+      <pre><code><span class="inc">#include</span> &lt;stdio.h&gt;
+
+<span class="type">int</span> <span class="fn">main</span>() {
+    <span class="type">int</span> a = <span class="num">10</span>, b = <span class="num">4</span>;
+    <span class="type">char</span> op;
+    <span class="fn">printf</span>(<span class="str">"Enter operator (+,-,*,/): "</span>);
+    <span class="fn">scanf</span>(<span class="str">"%c"</span>, &amp;op);
+
+    <span class="kw">switch</span> (op) {
+        <span class="kw">case</span> <span class="str">'+'</span>:
+            <span class="fn">printf</span>(<span class="str">"Result = %d\n"</span>, a + b);
+            <span class="kw">break</span>;
+        <span class="kw">case</span> <span class="str">'-'</span>:
+            <span class="fn">printf</span>(<span class="str">"Result = %d\n"</span>, a - b);
+            <span class="kw">break</span>;
+        <span class="kw">case</span> <span class="str">'*'</span>:
+            <span class="fn">printf</span>(<span class="str">"Result = %d\n"</span>, a * b);
+            <span class="kw">break</span>;
+        <span class="kw">case</span> <span class="str">'/'</span>:
+            <span class="kw">if</span> (b != <span class="num">0</span>)
+                <span class="fn">printf</span>(<span class="str">"Result = %d\n"</span>, a / b);
+            <span class="kw">else</span>
+                <span class="fn">printf</span>(<span class="str">"Division by zero!\n"</span>);
+            <span class="kw">break</span>;
+        <span class="kw">default</span>:
+            <span class="fn">printf</span>(<span class="str">"Invalid operator!\n"</span>);
+    }
+    <span class="kw">return</span> <span class="num">0</span>;
+}</code></pre>
+
+      <h3>Example — Day of Week</h3>
+      <pre><code><span class="type">int</span> day = <span class="num">3</span>;
+<span class="kw">switch</span> (day) {
+    <span class="kw">case</span> <span class="num">1</span>: <span class="fn">printf</span>(<span class="str">"Monday\n"</span>); <span class="kw">break</span>;
+    <span class="kw">case</span> <span class="num">2</span>: <span class="fn">printf</span>(<span class="str">"Tuesday\n"</span>); <span class="kw">break</span>;
+    <span class="kw">case</span> <span class="num">3</span>: <span class="fn">printf</span>(<span class="str">"Wednesday\n"</span>); <span class="kw">break</span>; <span class="cm">// This executes</span>
+    <span class="kw">default</span>: <span class="fn">printf</span>(<span class="str">"Other Day\n"</span>);
+}</code></pre>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="section" id="q7">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="q-num">Q.7</span>
+      <h2>Write short notes on: break, continue, goto</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="section-body">
+      <h3>1. break Statement</h3>
+      <p>The <strong>break</strong> statement <em>immediately exits</em> the nearest enclosing loop or switch statement. Execution continues with the statement after the loop/switch.</p>
+      <pre><code><span class="cm">/* break Example */</span>
+<span class="type">int</span> i;
+<span class="kw">for</span> (i = <span class="num">1</span>; i &lt;= <span class="num">10</span>; i++) {
+    <span class="kw">if</span> (i == <span class="num">5</span>)
+        <span class="kw">break</span>;     <span class="cm">// Loop stops when i=5</span>
+    <span class="fn">printf</span>(<span class="str">"%d "</span>, i);
+}
+<span class="cm">// Output: 1 2 3 4</span></code></pre>
+      <div class="highlight">Used in: loops (for, while, do-while) and switch statements to exit early.</div>
+
+      <h3>2. continue Statement</h3>
+      <p>The <strong>continue</strong> statement <em>skips the current iteration</em> of the loop and jumps to the next iteration. Unlike break, it does NOT exit the loop.</p>
+      <pre><code><span class="cm">/* continue Example */</span>
+<span class="type">int</span> i;
+<span class="kw">for</span> (i = <span class="num">1</span>; i &lt;= <span class="num">10</span>; i++) {
+    <span class="kw">if</span> (i % <span class="num">2</span> == <span class="num">0</span>)
+        <span class="kw">continue</span>;  <span class="cm">// Skip even numbers</span>
+    <span class="fn">printf</span>(<span class="str">"%d "</span>, i);
+}
+<span class="cm">// Output: 1 3 5 7 9 (odd numbers only)</span></code></pre>
+      <div class="highlight">Used in: loops when you want to skip certain iterations but continue the loop.</div>
+
+      <h3>3. goto Statement</h3>
+      <p>The <strong>goto</strong> statement transfers program control <em>unconditionally</em> to a labeled statement. It is generally considered bad practice but useful in error handling.</p>
+      <pre><code><span class="cm">/* goto Example */</span>
+<span class="inc">#include</span> &lt;stdio.h&gt;
+
+<span class="type">int</span> <span class="fn">main</span>() {
+    <span class="type">int</span> i = <span class="num">1</span>;
+
+start:                          <span class="cm">// Label</span>
+    <span class="fn">printf</span>(<span class="str">"%d "</span>, i);
+    i++;
+    <span class="kw">if</span> (i &lt;= <span class="num">5</span>)
+        <span class="kw">goto</span> start;         <span class="cm">// Jump to label 'start'</span>
+
+    <span class="fn">printf</span>(<span class="str">"\nDone!\n"</span>);
+    <span class="kw">return</span> <span class="num">0</span>;
+}
+<span class="cm">// Output: 1 2 3 4 5</span></code></pre>
+      <div class="highlight orange"><strong>Note:</strong> goto is discouraged because it makes code hard to read and debug. Use loops instead whenever possible.</div>
+
+      <h3>Summary Comparison</h3>
+      <table>
+        <tr><th>Statement</th><th>Purpose</th><th>Where Used</th></tr>
+        <tr><td>break</td><td>Exits loop/switch immediately</td><td>Loops, switch</td></tr>
+        <tr><td>continue</td><td>Skips current iteration</td><td>Loops only</td></tr>
+        <tr><td>goto</td><td>Jumps to a label unconditionally</td><td>Anywhere in function</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="section" id="q8">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="q-num">Q.8</span>
+      <h2>Write a program in C to find given number is Prime or not</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="section-body">
+      <h3>What is a Prime Number?</h3>
+      <p>A <strong>prime number</strong> is a number greater than 1 that has <em>no divisors other than 1 and itself</em>. Examples: 2, 3, 5, 7, 11, 13...</p>
+
+      <h3>Algorithm</h3>
+      <div class="highlight">
+        <strong>Step 1:</strong> Read number n<br>
+        <strong>Step 2:</strong> If n &lt;= 1, it is NOT prime<br>
+        <strong>Step 3:</strong> Check divisibility from 2 to n/2<br>
+        <strong>Step 4:</strong> If divisible by any, NOT prime<br>
+        <strong>Step 5:</strong> Else, it IS prime<br>
+        <strong>Step 6:</strong> Print result
+      </div>
+
+      <h3>C Program</h3>
+      <pre><code><span class="inc">#include</span> &lt;stdio.h&gt;
+
+<span class="type">int</span> <span class="fn">main</span>() {
+    <span class="type">int</span> n, i, flag = <span class="num">0</span>;
+
+    <span class="fn">printf</span>(<span class="str">"Enter a number: "</span>);
+    <span class="fn">scanf</span>(<span class="str">"%d"</span>, &amp;n);
+
+    <span class="kw">if</span> (n &lt;= <span class="num">1</span>) {
+        <span class="fn">printf</span>(<span class="str">"%d is NOT a prime number.\n"</span>, n);
+        <span class="kw">return</span> <span class="num">0</span>;
+    }
+
+    <span class="kw">for</span> (i = <span class="num">2</span>; i &lt;= n / <span class="num">2</span>; i++) {
+        <span class="kw">if</span> (n % i == <span class="num">0</span>) {
+            flag = <span class="num">1</span>;   <span class="cm">// Divisible, not prime</span>
+            <span class="kw">break</span>;
+        }
+    }
+
+    <span class="kw">if</span> (flag == <span class="num">0</span>)
+        <span class="fn">printf</span>(<span class="str">"%d is a PRIME number.\n"</span>, n);
+    <span class="kw">else</span>
+        <span class="fn">printf</span>(<span class="str">"%d is NOT a prime number.\n"</span>, n);
+
+    <span class="kw">return</span> <span class="num">0</span>;
+}</code></pre>
+
+      <div class="highlight green">
+        <strong>Output (n=7):</strong> 7 is a PRIME number.<br>
+        <strong>Output (n=10):</strong> 10 is NOT a prime number.<br>
+        <strong>Output (n=1):</strong> 1 is NOT a prime number.
+      </div>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="section" id="q9">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="q-num">Q.9</span>
+      <h2>Write a program in C to print Fibonacci Series</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="section-body">
+      <h3>What is Fibonacci Series?</h3>
+      <p>The <strong>Fibonacci Series</strong> is a sequence where each number is the <em>sum of the two preceding numbers</em>.</p>
+      <div class="highlight">
+        <strong>Series:</strong> 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, ...<br>
+        <strong>Formula:</strong> F(n) = F(n-1) + F(n-2) where F(0)=0, F(1)=1
+      </div>
+
+      <h3>C Program</h3>
+      <pre><code><span class="inc">#include</span> &lt;stdio.h&gt;
+
+<span class="type">int</span> <span class="fn">main</span>() {
+    <span class="type">int</span> n, a = <span class="num">0</span>, b = <span class="num">1</span>, c, i;
+
+    <span class="fn">printf</span>(<span class="str">"Enter number of terms: "</span>);
+    <span class="fn">scanf</span>(<span class="str">"%d"</span>, &amp;n);
+
+    <span class="fn">printf</span>(<span class="str">"Fibonacci Series: "</span>);
+
+    <span class="kw">if</span> (n &gt;= <span class="num">1</span>) <span class="fn">printf</span>(<span class="str">"%d "</span>, a);
+    <span class="kw">if</span> (n &gt;= <span class="num">2</span>) <span class="fn">printf</span>(<span class="str">"%d "</span>, b);
+
+    <span class="kw">for</span> (i = <span class="num">3</span>; i &lt;= n; i++) {
+        c = a + b;          <span class="cm">// Next term = sum of previous two</span>
+        <span class="fn">printf</span>(<span class="str">"%d "</span>, c);
+        a = b;              <span class="cm">// Shift forward</span>
+        b = c;
+    }
+    <span class="fn">printf</span>(<span class="str">"\n"</span>);
+    <span class="kw">return</span> <span class="num">0</span>;
+}</code></pre>
+
+      <div class="highlight green">
+        <strong>Output (n=10):</strong> 0 1 1 2 3 5 8 13 21 34
+      </div>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="section" id="q10">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="q-num">Q.10</span>
+      <h2>Explain Array in C</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="section-body">
+      <h3>What is an Array?</h3>
+      <p>An <strong>array</strong> is a collection of <em>elements of the same data type</em> stored in <strong>contiguous memory locations</strong>. Each element is accessed by an index (starting from 0).</p>
+
+      <div class="highlight">
+        <strong>Key Points:</strong>
+        <ul>
+          <li>All elements are of the same type</li>
+          <li>Stored in consecutive memory locations</li>
+          <li>Accessed using index: arr[0], arr[1], ...</li>
+          <li>Index starts from <strong>0</strong> to <strong>size-1</strong></li>
+          <li>Size must be specified at declaration (or initialized)</li>
+        </ul>
+      </div>
+
+      <h3>Types of Arrays</h3>
+      <h4>1. One-Dimensional (1D) Array</h4>
+      <pre><code><span class="cm">/* Declaration */</span>
+<span class="type">int</span> marks[<span class="num">5</span>];
+
+<span class="cm">/* Declaration + Initialization */</span>
+<span class="type">int</span> marks[<span class="num">5</span>] = {<span class="num">90</span>, <span class="num">85</span>, <span class="num">78</span>, <span class="num">92</span>, <span class="num">88</span>};
+
+<span class="cm">/* Accessing elements */</span>
+<span class="fn">printf</span>(<span class="str">"%d"</span>, marks[<span class="num">0</span>]);   <span class="cm">// 90 (first element)</span>
+<span class="fn">printf</span>(<span class="str">"%d"</span>, marks[<span class="num">4</span>]);   <span class="cm">// 88 (last element)</span>
+
+<span class="cm">/* Traversal */</span>
+<span class="type">int</span> i;
+<span class="kw">for</span> (i = <span class="num">0</span>; i &lt; <span class="num">5</span>; i++)
+    <span class="fn">printf</span>(<span class="str">"%d "</span>, marks[i]);</code></pre>
+
+      <h4>2. Two-Dimensional (2D) Array (Matrix)</h4>
+      <pre><code><span class="cm">/* 3x3 Matrix Declaration */</span>
+<span class="type">int</span> matrix[<span class="num">3</span>][<span class="num">3</span>] = {
+    {<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>},
+    {<span class="num">4</span>, <span class="num">5</span>, <span class="num">6</span>},
+    {<span class="num">7</span>, <span class="num">8</span>, <span class="num">9</span>}
+};
+
+<span class="cm">/* Access: matrix[row][column] */</span>
+<span class="fn">printf</span>(<span class="str">"%d"</span>, matrix[<span class="num">1</span>][<span class="num">2</span>]);  <span class="cm">// 6</span></code></pre>
+
+      <h3>Properties of Arrays</h3>
+      <table>
+        <tr><th>Property</th><th>Details</th></tr>
+        <tr><td>Data Type</td><td>All elements must be same type</td></tr>
+        <tr><td>Index</td><td>Starts from 0</td></tr>
+        <tr><td>Memory</td><td>Contiguous allocation</td></tr>
+        <tr><td>Size</td><td>Fixed at compile time</td></tr>
+        <tr><td>Access</td><td>Random access via index (O(1))</td></tr>
+        <tr><td>Dimensions</td><td>1D, 2D, Multi-dimensional</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Q11 -->
+  <div class="section" id="q11">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="q-num">Q.11</span>
+      <h2>Write a program in C for multiplication of 2D matrices of size 2×2</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="section-body">
+      <h3>Matrix Multiplication Concept</h3>
+      <p>For two 2×2 matrices A and B, the result C = A × B is calculated as:</p>
+      <div class="highlight">
+        C[i][j] = Σ A[i][k] * B[k][j] for k = 0 to n-1<br><br>
+        <strong>For 2×2:</strong><br>
+        C[0][0] = A[0][0]*B[0][0] + A[0][1]*B[1][0]<br>
+        C[0][1] = A[0][0]*B[0][1] + A[0][1]*B[1][1]<br>
+        C[1][0] = A[1][0]*B[0][0] + A[1][1]*B[1][0]<br>
+        C[1][1] = A[1][0]*B[0][1] + A[1][1]*B[1][1]
+      </div>
+
+      <h3>C Program</h3>
+      <pre><code><span class="inc">#include</span> &lt;stdio.h&gt;
+
+<span class="type">int</span> <span class="fn">main</span>() {
+    <span class="type">int</span> A[<span class="num">2</span>][<span class="num">2</span>], B[<span class="num">2</span>][<span class="num">2</span>], C[<span class="num">2</span>][<span class="num">2</span>];
+    <span class="type">int</span> i, j, k;
+
+    <span class="fn">printf</span>(<span class="str">"Enter elements of Matrix A (2x2):\n"</span>);
+    <span class="kw">for</span> (i = <span class="num">0</span>; i &lt; <span class="num">2</span>; i++)
+        <span class="kw">for</span> (j = <span class="num">0</span>; j &lt; <span class="num">2</span>; j++)
+            <span class="fn">scanf</span>(<span class="str">"%d"</span>, &amp;A[i][j]);
+
+    <span class="fn">printf</span>(<span class="str">"Enter elements of Matrix B (2x2):\n"</span>);
+    <span class="kw">for</span> (i = <span class="num">0</span>; i &lt; <span class="num">2</span>; i++)
+        <span class="kw">for</span> (j = <span class="num">0</span>; j &lt; <span class="num">2</span>; j++)
+            <span class="fn">scanf</span>(<span class="str">"%d"</span>, &amp;B[i][j]);
+
+    <span class="cm">/* Matrix Multiplication */</span>
+    <span class="kw">for</span> (i = <span class="num">0</span>; i &lt; <span class="num">2</span>; i++) {
+        <span class="kw">for</span> (j = <span class="num">0</span>; j &lt; <span class="num">2</span>; j++) {
+            C[i][j] = <span class="num">0</span>;
+            <span class="kw">for</span> (k = <span class="num">0</span>; k &lt; <span class="num">2</span>; k++)
+                C[i][j] += A[i][k] * B[k][j];
+        }
+    }
+
+    <span class="fn">printf</span>(<span class="str">"\nResult Matrix C = A x B:\n"</span>);
+    <span class="kw">for</span> (i = <span class="num">0</span>; i &lt; <span class="num">2</span>; i++) {
+        <span class="kw">for</span> (j = <span class="num">0</span>; j &lt; <span class="num">2</span>; j++)
+            <span class="fn">printf</span>(<span class="str">"%d\t"</span>, C[i][j]);
+        <span class="fn">printf</span>(<span class="str">"\n"</span>);
+    }
+    <span class="kw">return</span> <span class="num">0</span>;
+}</code></pre>
+
+      <div class="highlight green">
+        <strong>Sample Input A:</strong> [[1,2],[3,4]] &nbsp; <strong>Input B:</strong> [[5,6],[7,8]]<br>
+        <strong>Output C:</strong><br>
+        19 &nbsp; 22<br>
+        43 &nbsp; 50
+      </div>
+    </div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="section" id="q12">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="q-num">Q.12</span>
+      <h2>Difference between Call by Value and Call by Reference function</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="section-body">
+      <h3>Call by Value</h3>
+      <p>A <strong>copy</strong> of the actual argument is passed to the function. Changes made inside the function do <em>NOT affect</em> the original variable.</p>
+      <pre><code><span class="cm">/* Call by Value Example */</span>
+<span class="inc">#include</span> &lt;stdio.h&gt;
+
+<span class="type">void</span> <span class="fn">swap</span>(<span class="type">int</span> a, <span class="type">int</span> b) {
+    <span class="type">int</span> temp = a;
+    a = b;
+    b = temp;
+    <span class="fn">printf</span>(<span class="str">"Inside function: a=%d, b=%d\n"</span>, a, b);
+}
+
+<span class="type">int</span> <span class="fn">main</span>() {
+    <span class="type">int</span> x = <span class="num">10</span>, y = <span class="num">20</span>;
+    <span class="fn">swap</span>(x, y);
+    <span class="fn">printf</span>(<span class="str">"After call: x=%d, y=%d\n"</span>, x, y);
+    <span class="cm">// x and y unchanged! Output: x=10, y=20</span>
+    <span class="kw">return</span> <span class="num">0</span>;
+}</code></pre>
+
+      <h3>Call by Reference</h3>
+      <p>The <strong>address (reference)</strong> of the actual argument is passed. Changes inside the function <em>DO affect</em> the original variable.</p>
+      <pre><code><span class="cm">/* Call by Reference Example */</span>
+<span class="inc">#include</span> &lt;stdio.h&gt;
+
+<span class="type">void</span> <span class="fn">swap</span>(<span class="type">int</span> *a, <span class="type">int</span> *b) {  <span class="cm">// Pointers</span>
+    <span class="type">int</span> temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+<span class="type">int</span> <span class="fn">main</span>() {
+    <span class="type">int</span> x = <span class="num">10</span>, y = <span class="num">20</span>;
+    <span class="fn">swap</span>(&amp;x, &amp;y);   <span class="cm">// Pass addresses</span>
+    <span class="fn">printf</span>(<span class="str">"After call: x=%d, y=%d\n"</span>, x, y);
+    <span class="cm">// x=20, y=10 (ACTUALLY swapped!)</span>
+    <span class="kw">return</span> <span class="num">0</span>;
+}</code></pre>
+
+      <h3>Comparison Table</h3>
+      <table>
+        <tr><th>Feature</th><th>Call by Value</th><th>Call by Reference</th></tr>
+        <tr><td>What is passed</td><td>Copy of value</td><td>Address of variable</td></tr>
+        <tr><td>Original affected?</td><td>No</td><td>Yes</td></tr>
+        <tr><td>Memory</td><td>Extra memory for copy</td><td>No extra memory</td></tr>
+        <tr><td>Safety</td><td>Safer (original protected)</td><td>Risk of accidental change</td></tr>
+        <tr><td>Syntax</td><td>func(x)</td><td>func(&amp;x)</td></tr>
+        <tr><td>Parameter type</td><td>int x</td><td>int *x (pointer)</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Q13 -->
+  <div class="section" id="q13">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="q-num">Q.13</span>
+      <h2>What is String? Explain String handling functions with example</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="section-body">
+      <h3>What is a String?</h3>
+      <p>A <strong>string</strong> is a <em>sequence of characters</em> terminated by a <strong>null character '\0'</strong>. In C, strings are stored as character arrays.</p>
+      <pre><code><span class="cm">/* String Declaration */</span>
+<span class="type">char</span> name[<span class="num">20</span>] = <span class="str">"Hello"</span>;  <span class="cm">// {'H','e','l','l','o','\0'}</span>
+<span class="type">char</span> city[] = <span class="str">"Delhi"</span>;   <span class="cm">// Size auto-determined</span>
+
+<span class="cm">/* Input/Output */</span>
+<span class="fn">scanf</span>(<span class="str">"%s"</span>, name);       <span class="cm">// Reads one word</span>
+<span class="fn">gets</span>(name);              <span class="cm">// Reads full line with spaces</span>
+<span class="fn">printf</span>(<span class="str">"%s"</span>, name);     <span class="cm">// Print string</span>
+<span class="fn">puts</span>(name);              <span class="cm">// Print + newline</span></code></pre>
+
+      <h3>String Handling Functions (string.h)</h3>
+
+      <h4>1. strlen() — String Length</h4>
+      <pre><code><span class="inc">#include</span> &lt;string.h&gt;
+<span class="type">char</span> str[] = <span class="str">"Hello"</span>;
+<span class="fn">printf</span>(<span class="str">"%d"</span>, <span class="fn">strlen</span>(str));   <span class="cm">// Output: 5</span></code></pre>
+
+      <h4>2. strcpy() — String Copy</h4>
+      <pre><code><span class="type">char</span> src[] = <span class="str">"World"</span>;
+<span class="type">char</span> dest[<span class="num">20</span>];
+<span class="fn">strcpy</span>(dest, src);
+<span class="fn">printf</span>(<span class="str">"%s"</span>, dest);    <span class="cm">// Output: World</span></code></pre>
+
+      <h4>3. strcat() — String Concatenation</h4>
+      <pre><code><span class="type">char</span> s1[<span class="num">20</span>] = <span class="str">"Hello"</span>;
+<span class="type">char</span> s2[] = <span class="str">" World"</span>;
+<span class="fn">strcat</span>(s1, s2);
+<span class="fn">printf</span>(<span class="str">"%s"</span>, s1);     <span class="cm">// Output: Hello World</span></code></pre>
+
+      <h4>4. strcmp() — String Compare</h4>
+      <pre><code><span class="type">int</span> result = <span class="fn">strcmp</span>(<span class="str">"apple"</span>, <span class="str">"apple"</span>);
+<span class="cm">// Returns 0 if equal, negative if s1 < s2, positive if s1 > s2</span>
+<span class="kw">if</span> (result == <span class="num">0</span>) <span class="fn">printf</span>(<span class="str">"Strings are equal\n"</span>);</code></pre>
+
+      <h4>5. strupr() / strlwr() — Upper/Lower Case</h4>
+      <pre><code><span class="type">char</span> str[] = <span class="str">"hello"</span>;
+<span class="fn">printf</span>(<span class="str">"%s"</span>, <span class="fn">strupr</span>(str));  <span class="cm">// HELLO</span>
+<span class="fn">printf</span>(<span class="str">"%s"</span>, <span class="fn">strlwr</span>(str));  <span class="cm">// hello</span></code></pre>
+
+      <h4>6. strrev() — Reverse String</h4>
+      <pre><code><span class="type">char</span> str[] = <span class="str">"Hello"</span>;
+<span class="fn">printf</span>(<span class="str">"%s"</span>, <span class="fn">strrev</span>(str));  <span class="cm">// olleH</span></code></pre>
+
+      <table>
+        <tr><th>Function</th><th>Purpose</th><th>Header</th></tr>
+        <tr><td>strlen(s)</td><td>Returns length of string</td><td>string.h</td></tr>
+        <tr><td>strcpy(d, s)</td><td>Copies s into d</td><td>string.h</td></tr>
+        <tr><td>strcat(d, s)</td><td>Appends s to d</td><td>string.h</td></tr>
+        <tr><td>strcmp(s1, s2)</td><td>Compares two strings</td><td>string.h</td></tr>
+        <tr><td>strrev(s)</td><td>Reverses string</td><td>string.h</td></tr>
+        <tr><td>strupr(s)</td><td>Converts to uppercase</td><td>string.h</td></tr>
+        <tr><td>strlwr(s)</td><td>Converts to lowercase</td><td>string.h</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="section" id="q14">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="q-num">Q.14</span>
+      <h2>Write a program to declare, initialize and access a pointer and explain Pointer</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="section-body">
+      <h3>What is a Pointer?</h3>
+      <p>A <strong>pointer</strong> is a variable that <em>stores the memory address</em> of another variable. Instead of holding data directly, it holds the location of data in memory.</p>
+
+      <div class="highlight purple">
+        <strong>Key Operators:</strong><br>
+        <strong>&amp;</strong> — Address-of operator (gives address of variable)<br>
+        <strong>*</strong> — Dereference operator (gives value at address)
+      </div>
+
+      <h3>Declaration, Initialization, Access</h3>
+      <pre><code><span class="inc">#include</span> &lt;stdio.h&gt;
+
+<span class="type">int</span> <span class="fn">main</span>() {
+    <span class="type">int</span> num = <span class="num">42</span>;          <span class="cm">// Normal variable</span>
+    <span class="type">int</span> *ptr;               <span class="cm">// Pointer DECLARATION</span>
+
+    ptr = &amp;num;             <span class="cm">// INITIALIZATION — store address of num</span>
+
+    <span class="cm">/* ACCESSING */</span>
+    <span class="fn">printf</span>(<span class="str">"Value of num    : %d\n"</span>, num);
+    <span class="fn">printf</span>(<span class="str">"Address of num  : %p\n"</span>, &amp;num);
+    <span class="fn">printf</span>(<span class="str">"Value of ptr    : %p\n"</span>, ptr);   <span class="cm">// Same as &num</span>
+    <span class="fn">printf</span>(<span class="str">"Value at *ptr   : %d\n"</span>, *ptr);  <span class="cm">// Dereference = 42</span>
+
+    <span class="cm">/* Modify original via pointer */</span>
+    *ptr = <span class="num">100</span>;
+    <span class="fn">printf</span>(<span class="str">"num after *ptr=100: %d\n"</span>, num); <span class="cm">// 100</span>
+
+    <span class="kw">return</span> <span class="num">0</span>;
+}</code></pre>
+
+      <h3>Types of Pointers</h3>
+      <table>
+        <tr><th>Type</th><th>Description</th><th>Example</th></tr>
+        <tr><td>NULL Pointer</td><td>Points to nothing</td><td>int *p = NULL;</td></tr>
+        <tr><td>Void Pointer</td><td>Generic pointer, any type</td><td>void *p;</td></tr>
+        <tr><td>Wild Pointer</td><td>Uninitialized pointer (dangerous)</td><td>int *p; (no init)</td></tr>
+        <tr><td>Dangling Pointer</td><td>Points to freed memory</td><td>After free(p)</td></tr>
+        <tr><td>Double Pointer</td><td>Pointer to pointer</td><td>int **pp;</td></tr>
+      </table>
+
+      <h3>Pointer Arithmetic</h3>
+      <pre><code><span class="type">int</span> arr[<span class="num">3</span>] = {<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>};
+<span class="type">int</span> *p = arr;           <span class="cm">// Points to arr[0]</span>
+<span class="fn">printf</span>(<span class="str">"%d\n"</span>, *p);    <span class="cm">// 10</span>
+p++;                    <span class="cm">// Move to next element</span>
+<span class="fn">printf</span>(<span class="str">"%d\n"</span>, *p);    <span class="cm">// 20</span></code></pre>
+    </div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="section" id="q15">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="q-num">Q.15</span>
+      <h2>What is recursion? Write a recursive program to find factorial of any given number</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="section-body">
+      <h3>What is Recursion?</h3>
+      <p><strong>Recursion</strong> is a programming technique where a <em>function calls itself</em> to solve a smaller version of the same problem. Every recursive function must have a <strong>base case</strong> to stop.</p>
+
+      <div class="highlight">
+        <strong>Two Essential Parts:</strong>
+        <ul>
+          <li><strong>Base Case:</strong> Condition where recursion stops (e.g., n==0)</li>
+          <li><strong>Recursive Case:</strong> Function calls itself with smaller input</li>
+        </ul>
+      </div>
+
+      <h3>Factorial — Mathematical Definition</h3>
+      <div class="highlight green">
+        n! = n × (n-1) × (n-2) × ... × 1<br>
+        0! = 1 (base case)<br>
+        5! = 5 × 4 × 3 × 2 × 1 = 120
+      </div>
+
+      <h3>Recursive C Program for Factorial</h3>
+      <pre><code><span class="inc">#include</span> &lt;stdio.h&gt;
+
+<span class="cm">/* Recursive Function */</span>
+<span class="type">long</span> <span class="fn">factorial</span>(<span class="type">int</span> n) {
+    <span class="kw">if</span> (n == <span class="num">0</span> || n == <span class="num">1</span>)
+        <span class="kw">return</span> <span class="num">1</span>;          <span class="cm">// Base Case</span>
+    <span class="kw">else</span>
+        <span class="kw">return</span> n * <span class="fn">factorial</span>(n - <span class="num">1</span>);  <span class="cm">// Recursive Call</span>
+}
+
+<span class="type">int</span> <span class="fn">main</span>() {
+    <span class="type">int</span> n;
+    <span class="fn">printf</span>(<span class="str">"Enter a number: "</span>);
+    <span class="fn">scanf</span>(<span class="str">"%d"</span>, &amp;n);
+
+    <span class="kw">if</span> (n &lt; <span class="num">0</span>)
+        <span class="fn">printf</span>(<span class="str">"Factorial not defined for negative numbers.\n"</span>);
+    <span class="kw">else</span>
+        <span class="fn">printf</span>(<span class="str">"Factorial of %d = %ld\n"</span>, n, <span class="fn">factorial</span>(n));
+
+    <span class="kw">return</span> <span class="num">0</span>;
+}</code></pre>
+
+      <h3>How Recursion Works for factorial(5)</h3>
+      <div class="highlight orange">
+        factorial(5) → 5 × factorial(4)<br>
+        factorial(4) → 4 × factorial(3)<br>
+        factorial(3) → 3 × factorial(2)<br>
+        factorial(2) → 2 × factorial(1)<br>
+        factorial(1) → 1 ← BASE CASE<br>
+        ↑ Returns back: 1×2×3×4×5 = <strong>120</strong>
+      </div>
+
+      <div class="highlight green">
+        <strong>Output (n=5):</strong> Factorial of 5 = 120<br>
+        <strong>Output (n=0):</strong> Factorial of 0 = 1
+      </div>
+    </div>
+  </div>
+
+  <!-- Q16 -->
+  <div class="section" id="q16">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="q-num">Q.16</span>
+      <h2>Define a Structure and explain its features</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="section-body">
+      <h3>What is a Structure?</h3>
+      <p>A <strong>structure</strong> is a user-defined data type that <em>groups variables of different data types</em> under a single name. It is used to represent a record.</p>
+
+      <h3>Syntax and Example</h3>
+      <pre><code><span class="cm">/* Structure Definition */</span>
+<span class="kw">struct</span> Student {
+    <span class="type">int</span> rollNo;
+    <span class="type">char</span> name[<span class="num">50</span>];
+    <span class="type">float</span> marks;
+    <span class="type">char</span> grade;
+};
+
+<span class="type">int</span> <span class="fn">main</span>() {
+    <span class="cm">/* Declaration of structure variable */</span>
+    <span class="kw">struct</span> Student s1;
+
+    <span class="cm">/* Accessing members using dot operator */</span>
+    s1.rollNo = <span class="num">101</span>;
+    <span class="fn">strcpy</span>(s1.name, <span class="str">"Rahul"</span>);
+    s1.marks = <span class="num">85.5</span>;
+    s1.grade = <span class="str">'A'</span>;
+
+    <span class="fn">printf</span>(<span class="str">"Roll No : %d\n"</span>, s1.rollNo);
+    <span class="fn">printf</span>(<span class="str">"Name    : %s\n"</span>, s1.name);
+    <span class="fn">printf</span>(<span class="str">"Marks   : %.1f\n"</span>, s1.marks);
+    <span class="fn">printf</span>(<span class="str">"Grade   : %c\n"</span>, s1.grade);
+
+    <span class="kw">return</span> <span class="num">0</span>;
+}</code></pre>
+
+      <h3>Features of Structure</h3>
+      <div class="highlight">
+        <ul>
+          <li><strong>Heterogeneous:</strong> Can hold different data types (int, float, char)</li>
+          <li><strong>User-defined:</strong> You define its members</li>
+          <li><strong>Dot operator (.):</strong> Used to access members via variable</li>
+          <li><strong>Arrow operator (→):</strong> Used with structure pointers</li>
+          <li><strong>Nested structure:</strong> Structure inside another structure</li>
+          <li><strong>Array of structures:</strong> Useful for storing records (like a database)</li>
+          <li><strong>Memory:</strong> Each member gets its own memory (unlike union)</li>
+        </ul>
+      </div>
+
+      <h3>Array of Structures</h3>
+      <pre><code><span class="kw">struct</span> Student arr[<span class="num">3</span>];   <span class="cm">// 3 students</span>
+arr[<span class="num">0</span>].rollNo = <span class="num">1</span>;
+arr[<span class="num">1</span>].rollNo = <span class="num">2</span>;</code></pre>
+
+      <h3>Structure vs Union</h3>
+      <table>
+        <tr><th>Feature</th><th>Structure</th><th>Union</th></tr>
+        <tr><td>Memory</td><td>Sum of all members</td><td>Size of largest member</td></tr>
+        <tr><td>Members</td><td>All accessible at once</td><td>Only one at a time</td></tr>
+        <tr><td>Keyword</td><td>struct</td><td>union</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Q17 -->
+  <div class="section" id="q17">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="q-num">Q.17</span>
+      <h2>Explain any five standard Library functions in C</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="section-body">
+      <h3>1. printf() — stdio.h</h3>
+      <p>Used to <strong>print formatted output</strong> to the screen.</p>
+      <pre><code><span class="fn">printf</span>(<span class="str">"Name: %s, Age: %d, GPA: %.2f\n"</span>, <span class="str">"Rohan"</span>, <span class="num">20</span>, <span class="num">8.75</span>);
+<span class="cm">// Output: Name: Rohan, Age: 20, GPA: 8.75</span></code></pre>
+
+      <h3>2. scanf() — stdio.h</h3>
+      <p>Used to <strong>read formatted input</strong> from the keyboard.</p>
+      <pre><code><span class="type">int</span> n; <span class="type">float</span> x;
+<span class="fn">scanf</span>(<span class="str">"%d %f"</span>, &amp;n, &amp;x);   <span class="cm">// Read int and float</span></code></pre>
+
+      <h3>3. sqrt() — math.h</h3>
+      <p>Returns the <strong>square root</strong> of a number.</p>
+      <pre><code><span class="inc">#include</span> &lt;math.h&gt;
+<span class="type">double</span> result = <span class="fn">sqrt</span>(<span class="num">25.0</span>);
+<span class="fn">printf</span>(<span class="str">"%.1f"</span>, result);   <span class="cm">// 5.0</span></code></pre>
+
+      <h3>4. malloc() / free() — stdlib.h</h3>
+      <p><strong>malloc()</strong> dynamically allocates memory. <strong>free()</strong> releases it.</p>
+      <pre><code><span class="inc">#include</span> &lt;stdlib.h&gt;
+<span class="type">int</span> *ptr = (<span class="type">int</span>*) <span class="fn">malloc</span>(<span class="num">5</span> * <span class="kw">sizeof</span>(<span class="type">int</span>));  <span class="cm">// 5 ints</span>
+<span class="kw">if</span> (ptr == NULL) { <span class="fn">printf</span>(<span class="str">"Allocation failed!\n"</span>); }
+ptr[<span class="num">0</span>] = <span class="num">10</span>;
+<span class="fn">free</span>(ptr);    <span class="cm">// Release memory</span></code></pre>
+
+      <h3>5. abs() — stdlib.h / math.h</h3>
+      <p>Returns the <strong>absolute value</strong> of an integer.</p>
+      <pre><code><span class="inc">#include</span> &lt;stdlib.h&gt;
+<span class="type">int</span> x = -<span class="num">15</span>;
+<span class="fn">printf</span>(<span class="str">"%d"</span>, <span class="fn">abs</span>(x));   <span class="cm">// 15</span></code></pre>
+
+      <h3>Bonus Functions</h3>
+      <table>
+        <tr><th>Function</th><th>Purpose</th><th>Header</th></tr>
+        <tr><td>pow(x, y)</td><td>x raised to power y</td><td>math.h</td></tr>
+        <tr><td>rand()</td><td>Generate random number</td><td>stdlib.h</td></tr>
+        <tr><td>exit()</td><td>Terminate the program</td><td>stdlib.h</td></tr>
+        <tr><td>toupper(c)</td><td>Convert char to uppercase</td><td>ctype.h</td></tr>
+        <tr><td>isdigit(c)</td><td>Check if char is digit</td><td>ctype.h</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Q18 -->
+  <div class="section" id="q18">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="q-num">Q.18</span>
+      <h2>W.A.P in C to Print pattern</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="section-body">
+      <h3>Pattern 1 — Right Triangle of Stars</h3>
+      <pre><code><span class="inc">#include</span> &lt;stdio.h&gt;
+<span class="type">int</span> <span class="fn">main</span>() {
+    <span class="type">int</span> i, j, n = <span class="num">5</span>;
+    <span class="kw">for</span> (i = <span class="num">1</span>; i &lt;= n; i++) {
+        <span class="kw">for</span> (j = <span class="num">1</span>; j &lt;= i; j++)
+            <span class="fn">printf</span>(<span class="str">"* "</span>);
+        <span class="fn">printf</span>(<span class="str">"\n"</span>);
+    }
+    <span class="kw">return</span> <span class="num">0</span>;
+}</code></pre>
+      <div class="pattern-output">*
+* *
+* * *
+* * * *
+* * * * *</div>
+
+      <h3>Pattern 2 — Number Triangle</h3>
+      <pre><code><span class="type">int</span> i, j, n = <span class="num">5</span>;
+<span class="kw">for</span> (i = <span class="num">1</span>; i &lt;= n; i++) {
+    <span class="kw">for</span> (j = <span class="num">1</span>; j &lt;= i; j++)
+        <span class="fn">printf</span>(<span class="str">"%d "</span>, j);
+    <span class="fn">printf</span>(<span class="str">"\n"</span>);
+}</code></pre>
+      <div class="pattern-output">1
+1 2
+1 2 3
+1 2 3 4
+1 2 3 4 5</div>
+
+      <h3>Pattern 3 — Inverted Triangle</h3>
+      <pre><code><span class="type">int</span> i, j, n = <span class="num">5</span>;
+<span class="kw">for</span> (i = n; i &gt;= <span class="num">1</span>; i--) {
+    <span class="kw">for</span> (j = <span class="num">1</span>; j &lt;= i; j++)
+        <span class="fn">printf</span>(<span class="str">"* "</span>);
+    <span class="fn">printf</span>(<span class="str">"\n"</span>);
+}</code></pre>
+      <div class="pattern-output">* * * * *
+* * * *
+* * *
+* *
+*</div>
+
+      <h3>Pattern 4 — Pyramid (Diamond top)</h3>
+      <pre><code><span class="type">int</span> i, j, n = <span class="num">5</span>;
+<span class="kw">for</span> (i = <span class="num">1</span>; i &lt;= n; i++) {
+    <span class="kw">for</span> (j = i; j &lt; n; j++)   <span class="fn">printf</span>(<span class="str">" "</span>);
+    <span class="kw">for</span> (j = <span class="num">1</span>; j &lt;= (<span class="num">2</span>*i-<span class="num">1</span>); j++) <span class="fn">printf</span>(<span class="str">"*"</span>);
+    <span class="fn">printf</span>(<span class="str">"\n"</span>);
+}</code></pre>
+      <div class="pattern-output">    *
+   ***
+  *****
+ *******
+*********</div>
+
+      <h3>Pattern 5 — Alphabet Pattern</h3>
+      <pre><code><span class="type">int</span> i, j, n = <span class="num">5</span>;
+<span class="kw">for</span> (i = <span class="num">1</span>; i &lt;= n; i++) {
+    <span class="kw">for</span> (j = <span class="num">1</span>; j &lt;= i; j++)
+        <span class="fn">printf</span>(<span class="str">"%c "</span>, (<span class="type">char</span>)(<span class="str">'A'</span> + j - <span class="num">1</span>));
+    <span class="fn">printf</span>(<span class="str">"\n"</span>);
+}</code></pre>
+      <div class="pattern-output">A
+A B
+A B C
+A B C D
+A B C D E</div>
+    </div>
+  </div>
+
+  <!-- Q19 -->
+  <div class="section" id="q19">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="q-num">Q.19</span>
+      <h2>Explain how Pointers can be used with function, array or structure</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="section-body">
+      <h3>1. Pointer with Functions</h3>
+      <p>Pointers allow functions to modify original variables (Call by Reference) and return multiple values.</p>
+      <pre><code><span class="cm">/* Pointer with Function — Swap */</span>
+<span class="type">void</span> <span class="fn">swap</span>(<span class="type">int</span> *a, <span class="type">int</span> *b) {
+    <span class="type">int</span> temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+<span class="type">int</span> <span class="fn">main</span>() {
+    <span class="type">int</span> x = <span class="num">5</span>, y = <span class="num">10</span>;
+    <span class="fn">swap</span>(&amp;x, &amp;y);              <span class="cm">// Pass addresses</span>
+    <span class="fn">printf</span>(<span class="str">"%d %d\n"</span>, x, y); <span class="cm">// 10 5 — actually swapped</span>
+    <span class="kw">return</span> <span class="num">0</span>;
+}
+
+<span class="cm">/* Function Pointer */</span>
+<span class="type">int</span> <span class="fn">add</span>(<span class="type">int</span> a, <span class="type">int</span> b) { <span class="kw">return</span> a+b; }
+<span class="type">int</span> (*fp)(<span class="type">int</span>, <span class="type">int</span>) = add;  <span class="cm">// Function pointer</span>
+<span class="fn">printf</span>(<span class="str">"%d"</span>, <span class="fn">fp</span>(<span class="num">3</span>, <span class="num">4</span>));        <span class="cm">// 7</span></code></pre>
+
+      <h3>2. Pointer with Arrays</h3>
+      <p>An array name is itself a pointer to its first element. We can traverse arrays using pointer arithmetic.</p>
+      <pre><code><span class="type">int</span> arr[<span class="num">5</span>] = {<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>, <span class="num">40</span>, <span class="num">50</span>};
+<span class="type">int</span> *ptr = arr;    <span class="cm">// ptr points to arr[0]</span>
+<span class="type">int</span> i;
+
+<span class="cm">/* Traverse array with pointer */</span>
+<span class="kw">for</span> (i = <span class="num">0</span>; i &lt; <span class="num">5</span>; i++) {
+    <span class="fn">printf</span>(<span class="str">"%d "</span>, *(ptr + i));  <span class="cm">// Same as arr[i]</span>
+}
+<span class="cm">// Output: 10 20 30 40 50</span>
+
+<span class="cm">/* Equivalent ways to access arr[2] */</span>
+<span class="fn">printf</span>(<span class="str">"%d\n"</span>, arr[<span class="num">2</span>]);        <span class="cm">// 30</span>
+<span class="fn">printf</span>(<span class="str">"%d\n"</span>, *(arr + <span class="num">2</span>));    <span class="cm">// 30</span>
+<span class="fn">printf</span>(<span class="str">"%d\n"</span>, *(ptr + <span class="num">2</span>));   <span class="cm">// 30</span>
+<span class="fn">printf</span>(<span class="str">"%d\n"</span>, ptr[<span class="num">2</span>]);        <span class="cm">// 30</span></code></pre>
+
+      <h3>3. Pointer with Structures</h3>
+      <p>Pointers to structures use the <strong>arrow operator (→)</strong> to access members.</p>
+      <pre><code><span class="kw">struct</span> Student {
+    <span class="type">int</span> roll;
+    <span class="type">char</span> name[<span class="num">20</span>];
+};
+
+<span class="type">int</span> <span class="fn">main</span>() {
+    <span class="kw">struct</span> Student s = {<span class="num">101</span>, <span class="str">"Ankit"</span>};
+    <span class="kw">struct</span> Student *ptr = &amp;s;   <span class="cm">// Pointer to structure</span>
+
+    <span class="cm">/* Access using arrow operator */</span>
+    <span class="fn">printf</span>(<span class="str">"Roll: %d\n"</span>, ptr-&gt;roll);
+    <span class="fn">printf</span>(<span class="str">"Name: %s\n"</span>, ptr-&gt;name);
+
+    <span class="cm">/* Same as: (*ptr).roll */</span>
+    <span class="kw">return</span> <span class="num">0</span>;
+}</code></pre>
+
+      <table>
+        <tr><th>Usage</th><th>Syntax</th><th>Description</th></tr>
+        <tr><td>Pointer + Function</td><td>func(&amp;x) / int *p</td><td>Modifies original</td></tr>
+        <tr><td>Pointer + Array</td><td>*(ptr+i) / ptr[i]</td><td>Traverse array</td></tr>
+        <tr><td>Pointer + Structure</td><td>ptr→member</td><td>Access struct member</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Q20 -->
+  <div class="section" id="q20">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="q-num">Q.20</span>
+      <h2>Explain Flow Chart with all its symbols</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="section-body">
+      <h3>What is a Flowchart?</h3>
+      <p>A <strong>flowchart</strong> is a <em>graphical/diagrammatic representation</em> of an algorithm or process using standard symbols connected by arrows showing the flow of control. It helps visualize the logic before coding.</p>
+
+      <h3>Standard Flowchart Symbols</h3>
+      <div class="flowchart-grid">
+        <div class="flow-symbol">
+          <div class="flow-shape">
+            <svg width="80" height="50">
+              <ellipse cx="40" cy="25" rx="38" ry="22" fill="none" stroke="#00d4ff" stroke-width="2"/>
+              <text x="40" y="30" text-anchor="middle" fill="#00d4ff" font-size="12" font-family="Share Tech Mono">START/END</text>
+            </svg>
+          </div>
+          <strong style="color:var(--yellow)">Oval / Terminator</strong><br>
+          <small style="color:var(--muted)">Marks the start or end of the flowchart</small>
+        </div>
+
+        <div class="flow-symbol">
+          <div class="flow-shape">
+            <svg width="80" height="50">
+              <rect x="5" y="8" width="70" height="34" fill="none" stroke="#00ff88" stroke-width="2"/>
+              <text x="40" y="30" text-anchor="middle" fill="#00ff88" font-size="11" font-family="Share Tech Mono">Process</text>
+            </svg>
+          </div>
+          <strong style="color:var(--yellow)">Rectangle / Process</strong><br>
+          <small style="color:var(--muted)">Represents a process, calculation or action</small>
+        </div>
+
+        <div class="flow-symbol">
+          <div class="flow-shape">
+            <svg width="80" height="55">
+              <polygon points="40,5 75,27 40,50 5,27" fill="none" stroke="#ff6b35" stroke-width="2"/>
+              <text x="40" y="31" text-anchor="middle" fill="#ff6b35" font-size="10" font-family="Share Tech Mono">Decision</text>
+            </svg>
+          </div>
+          <strong style="color:var(--yellow)">Diamond / Decision</strong><br>
+          <small style="color:var(--muted)">Represents Yes/No, True/False condition</small>
+        </div>
+
+        <div class="flow-symbol">
+          <div class="flow-shape">
+            <svg width="80" height="50">
+              <polygon points="5,42 5,8 75,8 75,42 60,50 5,42" fill="none" stroke="#bd93f9" stroke-width="2"/>
+              <text x="38" y="32" text-anchor="middle" fill="#bd93f9" font-size="9" font-family="Share Tech Mono">Input/Output</text>
+            </svg>
+          </div>
+          <strong style="color:var(--yellow)">Parallelogram</strong><br>
+          <small style="color:var(--muted)">Input (read) or Output (print/display)</small>
+        </div>
+
+        <div class="flow-symbol">
+          <div class="flow-shape">
+            <svg width="80" height="50">
+              <line x1="40" y1="5" x2="40" y2="45" stroke="#ffd700" stroke-width="2" marker-end="url(#arrow)"/>
+              <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#ffd700"/></marker></defs>
+              <text x="55" y="28" fill="#ffd700" font-size="11" font-family="Share Tech Mono">Flow</text>
+            </svg>
+          </div>
+          <strong style="color:var(--yellow)">Arrow / Flowline</strong><br>
+          <small style="color:var(--muted)">Shows direction of flow/control</small>
+        </div>
+
+        <div class="flow-symbol">
+          <div class="flow-shape">
+            <svg width="80" height="50">
+              <circle cx="40" cy="25" r="15" fill="none" stroke="#ff3366" stroke-width="2"/>
+              <text x="40" y="30" text-anchor="middle" fill="#ff3366" font-size="10" font-family="Share Tech Mono">Conn</text>
+            </svg>
+          </div>
+          <strong style="color:var(--yellow)">Circle / Connector</strong><br>
+          <small style="color:var(--muted)">Connects different parts of the flowchart</small>
+        </div>
+
+        <div class="flow-symbol">
+          <div class="flow-shape">
+            <svg width="80" height="50">
+              <path d="M5,42 Q5,8 40,8 Q75,8 75,42" fill="none" stroke="#50fa7b" stroke-width="2"/>
+              <line x1="5" y1="42" x2="75" y2="42" stroke="#50fa7b" stroke-width="2"/>
+              <text x="40" y="38" text-anchor="middle" fill="#50fa7b" font-size="9" font-family="Share Tech Mono">Predefined</text>
+            </svg>
+          </div>
+          <strong style="color:var(--yellow)">Predefined Process</strong><br>
+          <small style="color:var(--muted)">Calls a subroutine or pre-written function</small>
+        </div>
+
+        <div class="flow-symbol">
+          <div class="flow-shape">
+            <svg width="80" height="50">
+              <rect x="5" y="8" width="70" height="34" fill="none" stroke="#8be9fd" stroke-width="2" rx="0"/>
+              <line x1="5" y1="18" x2="75" y2="18" stroke="#8be9fd" stroke-width="1"/>
+              <text x="40" y="36" text-anchor="middle" fill="#8be9fd" font-size="9" font-family="Share Tech Mono">Document</text>
+            </svg>
+          </div>
+          <strong style="color:var(--yellow)">Document Symbol</strong><br>
+          <small style="color:var(--muted)">Represents a printed document or report</small>
+        </div>
+      </div>
+
+      <h3>Example: Flowchart to Find Largest of Two Numbers</h3>
+      <div class="highlight">
+        <strong>START</strong><br>
+        ↓<br>
+        [Input A, B] (Parallelogram)<br>
+        ↓<br>
+        &lt;Is A &gt; B?&gt; (Diamond)<br>
+        ↓ YES &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NO ↓<br>
+        [Print A is Largest] &nbsp;&nbsp; [Print B is Largest]<br>
+        ↓ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ↓<br>
+        <strong>STOP</strong>
+      </div>
+
+      <h3>Advantages of Flowcharts</h3>
+      <ul>
+        <li>Provides visual representation of logic</li>
+        <li>Helps in program design before coding</li>
+        <li>Easy to understand and communicate</li>
+        <li>Helpful in debugging and finding errors</li>
+        <li>Serves as documentation for the program</li>
+      </ul>
+
+      <h3>Summary Table</h3>
+      <table>
+        <tr><th>Symbol</th><th>Shape</th><th>Meaning</th></tr>
+        <tr><td>Terminator</td><td>Oval</td><td>Start / Stop</td></tr>
+        <tr><td>Process</td><td>Rectangle</td><td>Assignment, calculation</td></tr>
+        <tr><td>Decision</td><td>Diamond</td><td>Condition check (Yes/No)</td></tr>
+        <tr><td>I/O</td><td>Parallelogram</td><td>Input/Output operations</td></tr>
+        <tr><td>Flowline</td><td>Arrow</td><td>Direction of flow</td></tr>
+        <tr><td>Connector</td><td>Circle</td><td>Join flowchart parts</td></tr>
+        <tr><td>Predefined</td><td>Rect with lines</td><td>Function / subroutine</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <button class="expand-all-btn" onclick="expandAll()">⚡ EXPAND ALL ANSWERS</button>
+
+
+  
+
+</main>
+
+<footer>
+  <p>🔥 <span class="glow-text">EXAM DATE: 18 MAY 2026</span> 🔥</p>
+  <p style="margin-top:10px;">Programming with C — Complete Question Paper Guide</p>
+  <p style="margin-top:8px;">💀 Leaked By: <strong style="color:var(--accent2);">Hacker Vishw Pratap</strong>, <strong style="color:var(--accent2);">Hacker Ankush</strong> &amp; <strong style="color:var(--accent2);">Hariom Mishra</strong> 💀</p>
+  <p style="margin-top:8px; font-size:11px;">All 20 Questions Covered | Study Well &amp; Good Luck! ⚡</p>
+</footer>
+
+<script>
+  function toggle(header) {
+    const section = header.parentElement;
+    section.classList.toggle('open');
+  }
+
+  function expandAll() {
+    const sections = document.querySelectorAll('.section');
+    const allOpen = [...sections].every(s => s.classList.contains('open'));
+    sections.forEach(s => {
+      if (allOpen) s.classList.remove('open');
+      else s.classList.add('open');
+    });
+    const btn = document.querySelector('.expand-all-btn');
+    btn.textContent = allOpen ? '⚡ EXPAND ALL ANSWERS' : '🔼 COLLAPSE ALL';
+  }
+
+  // Open first section by default
+  document.querySelector('.section').classList.add('open');
+</script>
+</body>
+</html>
